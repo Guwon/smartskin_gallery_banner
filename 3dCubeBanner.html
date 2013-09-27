@@ -1,0 +1,523 @@
+
+<!-- transform3d support browser -->
+<div id="cubeBanner-container" >
+	<div class="cube-container-inner" onclick="">
+		<div class="cube-wrapper">
+			<div class="cubeBanner-origin"></div>
+			<div class="cubeBanner-inner">
+				<section class="cubeBanner" >
+				</section>
+		   </div> 
+		</div>
+	</div>
+	<div class="cubeBanner-btn">
+		<span><i class="icon-angle-left"></i></span>
+		<span><i class="icon-angle-right"></i></span>
+	</div>
+</div>
+
+<!-- transform3d unsupport browser -->
+<div id="cubeBanner-container-gallery" class="m-carousel m-fluid m-carousel-photos">
+  <div class="m-carousel-inner">
+  </div>
+  <div class="m-carousel-controls m-carousel-bulleted">
+  </div>
+</div>
+
+<!-- css  -->
+
+#cubeBanner-container .cubeBanner-btn{
+display:none;
+}
+
+#cubeBanner-container .cubeBanner-btn  span{
+background:rgba(255,255,255,0.5);
+border-radius:3px;
+padding:2px 5px 2px 5px;
+box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+-moz-box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+-webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}
+
+#cubeBanner-container-gallery{
+display:none;
+}
+
+#cubeBanner-container{
+	width:100%;
+	text-align:center;
+	position: relative;
+}
+
+
+#cubeBanner-container .cube-wrapper{
+	position: relative;
+	width:100%;
+	display:inline-block;
+}
+#cubeBanner-container img{
+	width:100%;
+	vertical-align: middle;
+}
+
+#cubeBanner-container .cubeBanner-origin{
+	float: left;
+	opacity: 0;
+	width: 100%;
+}
+
+#cubeBanner-container .cubeBanner-inner {
+	position: absolute;
+	top:0px;
+    width: 82%;
+    -webkit-perspective: 800;
+    -webkit-perspective-origin: 0% 0%;
+	
+	-moz-perspective: 800;
+    -moz-perspective-origin: 58% 30%;
+	-o-perspective: 800;
+    -o-perspective-origin: 58% 30%;
+	-ms-perspective: 800;
+    -ms-perspective-origin: 58% 30%;
+
+}
+
+#cubeBanner-container .cubeBanner {
+    position: absolute;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+	opacity:1;
+	
+    -webkit-transition: -webkit-transform 500ms ease-in-out;
+    -webkit-transform-style: preserve-3d;
+    -moz-transition: -moz-transform 500ms ease-in-out;
+    -moz-transform-style: preserve-3d;
+	-o-transition: -moz-transform 500ms ease-in-out;
+    -o-transform-style: preserve-3d;
+	-ms-transition: -moz-transform 500ms ease-in-out;
+    -ms-transform-style: preserve-3d;
+	transition: -moz-transform 500ms ease-in-out;
+    transform-style: preserve-3d;
+
+}
+
+
+#cubeBanner-container .cubeBanner > div {
+    position: absolute;
+	height: 100%;
+    height:auto; 
+    width: 100%;
+}
+
+#cubeBanner-container .cubeBanner > div:first-child  {
+	 -webkit-transform: translateZ(146px);
+    -moz-transform: translateZ(146px);
+	-o-transform: translateZ(146px);
+	-ms-transform: translateZ(146px);
+	transform: translateZ(146px);
+}
+
+#cubeBanner-container .cubeBanner > div:nth-child(2) {
+    -webkit-transform: rotateY(-90deg) translateZ(146px);
+    -moz-transform: rotateY(-90deg) translateZ(146px);
+	-o-transform: rotateY(-90deg) translateZ(146px);
+	-ms-transform: rotateY(-90deg) translateZ(146px);
+	transform: rotateY(-90deg) translateZ(146px);
+}
+
+
+#cubeBanner-container .cubeBanner > div:nth-child(3) {
+    -webkit-transform: rotateY(180deg) translateZ(146px);
+    -moz-transform: rotateY(180deg) translateZ(146px);
+	-o-transform: rotateY(180deg) translateZ(146px);
+	-ms-transform: rotateY(180deg) translateZ(146px);
+	transform: rotateY(180deg) translateZ(146px); 
+}
+
+#cubeBanner-container .cubeBanner > div:nth-child(4) {
+    -webkit-transform: rotateY(90deg) translateZ(146px);
+    -moz-transform: rotateY(90deg) translateZ(146px);
+	-o-transform: rotateY(90deg) translateZ(146px);
+	-ms-transform: rotateY(90deg) translateZ(146px);
+	transform: rotateY(90deg) translateZ(146px); 
+}
+
+.cubeBanner-btn span{
+position:absolute;
+top:50%;
+font-size:35px;
+margin-top:-15px;
+
+}
+
+.cubeBanner-btn :first-child{
+left:5px;
+}
+
+.cubeBanner-btn :last-child{
+right:5px;
+}
+
+<!-- 자바 스크립트 -->
+  
+/* Cube Banner START 
+======================================================================*/
+(function($){
+	var documentWidth=parseInt($(document).width());
+	var cubeBannerDevice=new Array(
+	{d:320,w:82,z:146},
+	{d:360,w:82,z:145},
+	{d:400,w:80.5,z:157},
+	{d:480,w:77,z:184},
+	{d:533,w:75,z:200},
+	{d:568,w:74,z:209},
+	{d:768,w:67.8,z:258},
+	{d:800,w:66.8,z:266},
+	{d:1024,w:61,z:312}
+	);
+
+	var cubeBannerSwipe=function(el,option)
+	{
+		var transEl = document.createElement('div'),
+			transformProps = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
+			transformProp=support(transformProps);
+		
+		var cube=function(el,option){
+			this.index=1;
+			
+			this.el=$("#"+el);
+			this.imgList=option.imgList;
+			this.imgListLink=option.imgListLink;
+			
+			if(!this.el.length || !this.imgList.length)
+				return;
+				
+			this.el_inner=$("#"+el+" .cube-container-inner");
+			this.el_banner=$("#"+el+" .cubeBanner");
+
+			this.imgTotal=this.imgList.length;
+			this.touched=true;
+			
+			this.deg=0;
+			this.setinterval;
+			
+			$("#"+el+" .cubeBanner-origin").html("<img src='"+this.imgList[0]+"'>");
+			var link=this.imgListLink[0];
+			this.el_inner.bind("click",function(){
+				location.href=link;
+				
+			}); 
+			
+			var cal_width=82;
+			var cal_translateZ=146;
+			$.each(cubeBannerDevice,function(key,val){
+				
+				if(val.d==documentWidth){	
+					cal_translateZ=val.z;
+					cal_width=val.w;
+				}
+			});
+			this.cal_translateZ=cal_translateZ;
+
+			$("#"+el+" .cubeBanner-inner").css("width",cal_width+"%");
+			
+			this.image(1);
+			this.bind();
+			this.autoMove();
+			
+			$("#cubeBanner-container .cubeBanner-btn").css("display","block"); 
+		}
+		
+		function support(props) {
+			for(var i = 0, l = props.length; i < l; i++) {
+				if(typeof transEl.style[props[i]] !== "undefined") {
+					return props[i];
+				}
+			}
+		}
+		
+		function getCursorPosition(touch){
+			var obj= touch.originalEvent.touches ? {x: touch.originalEvent.touches[0].clientX, y: touch.originalEvent.touches[0].clientY}
+			:{x: touch.clientX, y: touch.clientY};
+			return obj;
+		}
+		
+		cube.prototype.autoMove=function(){
+			var cube=this;
+			this.setinterval=setInterval(function(){
+				cube.touched=false;
+				cube.move("R");
+			},3000);
+
+		}
+		
+		cube.prototype.move=function(direction){
+			if(this.touched)
+				return;
+			console.log("move:",direction);
+			this.touched=false;
+			var cube=this;
+			console.log("last Index:",this.index);
+			if(direction=="R"){
+				if(this.index==this.imgTotal)
+					this.index=1;
+				else
+					this.index++;
+				
+				this.deg-=90;
+					
+			}else if(direction=="L"){
+				if(this.index==1)
+					this.index=this.imgTotal;
+				else
+					this.index--;
+				
+				this.deg+=90;
+			}
+			var link=this.imgListLink[this.index-1];
+			this.el_inner.bind("click",function(){
+				location.href=link;
+			});
+			this.el_banner.css(transformProp,"rotateY("+this.deg+"deg)");
+			
+			setTimeout(function(){
+				cube.image(cube.index);
+				cube.touched=true;
+				setTimeout(function(){
+					console.log(cube.touched,cube.setinterval);
+					if(cube.touched && !cube.setinterval)
+						cube.autoMove();
+				},3000);
+			},500);
+		}
+		
+		cube.prototype.image=function(index){
+			var total=this.imgTotal;
+			if(total==4){
+				if(!this.el_banner.html()){
+					if(this.imgList[0])
+						var html="<div><img src='"+this.imgList[0]+"'>&nbsp;</div>";	
+					if(this.imgList[1])
+						html+="<div><img src='"+this.imgList[1]+"'>&nbsp;</div>";
+					if(this.imgList[2])
+						html+="<div><img src='"+this.imgList[2]+"'>&nbsp;</div>";
+					if(this.imgList[3])
+						html+="<div><img src='"+this.imgList[3]+"'>&nbsp;</div>";
+					
+					this.el_banner.html(html);
+					this.el_banner.find("div").eq(0).css(transformProp, " translateZ("+this.cal_translateZ+"px)");
+					this.el_banner.find("div").eq(1).css(transformProp, "rotateY(90deg) translateZ("+this.cal_translateZ+"px)");
+					this.el_banner.find("div").eq(2).css(transformProp, "rotateY(180deg) translateZ("+this.cal_translateZ+"px)");
+					this.el_banner.find("div").eq(3).css(transformProp, "rotateY(-90deg) translateZ("+this.cal_translateZ+"px)");
+				}
+			}else{
+				var current_step=Math.abs((this.deg/90)%4);
+				
+				if(current_step){
+					if(this.deg<0)
+						current_step=current_step+1;
+					else
+						current_step=5-current_step;
+				}else{
+					current_step++;
+				}
+				
+				this.index=index;
+				var fisrt=0;
+				var second=0;
+				var third=0;
+				var fourth=0;
+				var current=index-1;
+				
+				if(current_step==1){
+					fisrt=current;
+					second=Math.abs((current+1)%total);
+					third=Math.abs((current+2)%total);
+					if((current-1)<0)
+						fourth=total-1;
+					else
+						fourth=Math.abs((current-1)%total);
+					
+				}else if(current_step==2){
+					if((current-1)<0){
+						fisrt=total-1;
+					}else{
+						fisrt=Math.abs((current-1)%total);
+					}
+					second=current;
+					third=Math.abs((current+1)%total);
+					fourth=Math.abs((current+2)%total);
+				}else if(current_step==3){
+					if((current-2)<0)
+						fisrt=total-2;
+					else
+						fisrt=Math.abs((current-2)%total);
+						
+					if((current-1)<0)
+						second=total-1;
+					else
+						second=Math.abs((current-1)%total);
+
+					third=current;
+					fourth=Math.abs((current+1)%total);
+				}else if(current_step==4){
+					if(current==total-1)
+						fisrt=0;
+					else
+						fisrt=Math.abs((current+1)%total);
+						
+					if((current-2)<0)
+						second=total-2;
+					else
+						second=Math.abs((current-2)%total);
+						
+					if((current-1)<0)
+						third=total-1;
+					else
+						third=Math.abs((current-1)%total);
+					
+					fourth=current;
+				}
+				
+				//if(current_step==1){
+				if(this.imgList[fisrt])
+					var html="<div><img src='"+this.imgList[fisrt]+"'>&nbsp;</div>";
+				if(this.imgList[second])
+					html+="<div><img src='"+this.imgList[second]+"'>&nbsp;</div>";
+				if(this.imgList[third])
+					html+="<div><img src='"+this.imgList[third]+"'>&nbsp;</div>";
+				if(this.imgList[fourth])
+					html+="<div><img src='"+this.imgList[fourth]+"'>&nbsp;</div>";
+				
+				this.el_banner.html(html);
+				this.el_banner.find("div").eq(0).css(transformProp, " translateZ("+this.cal_translateZ+"px)");
+				this.el_banner.find("div").eq(1).css(transformProp, "rotateY(90deg) translateZ("+this.cal_translateZ+"px)");
+				this.el_banner.find("div").eq(2).css(transformProp, "rotateY(180deg) translateZ("+this.cal_translateZ+"px)");
+				this.el_banner.find("div").eq(3).css(transformProp, "rotateY(-90deg) translateZ("+this.cal_translateZ+"px)");
+				//}
+			}
+			
+		}
+		
+
+		
+		cube.prototype.bind = function() {
+			var el=this.el;
+			var el_banner=this.el_banner;
+			var el_inner=this.el_inner;
+			var startX=0;
+			var startY=0;
+			var cube=this;
+			
+			el.bind("mousedown touchstart", dragStart);
+			
+			function dargInit(){
+				cube.touched=false;
+			}
+
+			function dragStart(e){
+				if(!cube.touched)
+					return;
+				
+				clearInterval(cube.setinterval);
+				cube.setinterval=0;
+				var startXY=getCursorPosition(e);
+				var cube_direction="";
+				dargInit();
+				
+				startX=startXY.x;
+				startY=startXY.y
+
+				el_inner.bind('mousemove touchmove', function(event) {
+					if(event.originalEvent) {
+						var XY=getCursorPosition(event);
+						console.log(startX,XY);
+						cube_direction=direction(startX,startY,XY);
+						if(cube_direction){
+							el_inner.unbind('mousemove touchmove');
+							cube.move(cube_direction);
+						}else{
+							cube.touched=true;
+						}
+					}else{
+						cube.touched=true;
+					}
+				});
+				
+				el.bind('mousedown touchend', function(event) {	
+					el_inner.unbind('mousemove touchmove');	
+					cube.touched=true;
+				});
+			}
+			
+			function direction(sX,sY,XY){
+				if(sX-XY.x >= 3)
+					return "R";
+				else if(sX-XY.x <= -3)
+					return "L";
+				else
+					return "";
+			}
+			
+			/* next,prev btn */
+			$(".cubeBanner-btn span:first-child").bind("click",function(){
+				dargInit();
+				clearInterval(cube.setinterval);
+				cube.setinterval=0;
+				cube.move("L");
+			});
+			
+			$(".cubeBanner-btn span:last-child").bind("click",function(){
+				dargInit();
+				clearInterval(cube.setinterval);
+				cube.setinterval=0;
+				cube.move("R");
+			});
+		}
+		new cube(el,option);
+	}
+
+	$(document).ready(function(){
+		if($("#category_menu_main").length){
+			$("#category_menu").hide();
+			$("#category_menu_main").show();
+		}
+		
+		if($("#cubeBanner-container").length){
+			var perspective=Modernizr.csstransforms3d;
+			//var perspective;
+			if(perspective){
+				var cubeBanner=new cubeBannerSwipe("cubeBanner-container",{
+					imgList:cubeBannerImgList,
+					imgListLink:cubeBannerImgList_Link,
+					auto:true
+				});
+			}else{
+				cubeBanner_Gallery();
+			}
+			
+		}
+		
+		//상세페이지 구매버튼 
+		if($("#absolute_buyBtn").length){
+			//console.log($(".tSubmit1").css("display"));
+			if($(".tSubmit1").css("display")=="inline-block"){
+				window.setInterval(function(){
+					var scrollPosition = $(window).scrollTop();
+					//console.log(scrollPosition);
+					if(scrollPosition>700)
+						$("#absolute_buyBtn").show();
+					else
+						$("#absolute_buyBtn").hide();
+
+				},1);
+
+			}
+		}
+		
+	});
+})(jQuery);
+
+/* Cube Banner END 
+======================================================================*/
