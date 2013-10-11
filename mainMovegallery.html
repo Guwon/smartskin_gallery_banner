@@ -37,11 +37,13 @@ overflow:hidden;
 #mainmove_bestGallery .gallery ul{
 width:170%;
 display:block;
+font-size:0;
 }
 
 #mainmove_bestGallery .gallery li{
 display:inline-block;
-width:19%;
+width:19.5%;
+padding:0 3px 0 0 ;
 }
 
 #mainmove_bestGallery .gallery img{
@@ -76,7 +78,8 @@ box-shadow:0px 0px 4px rgba(0,0,0,0.2);
 
 
 <!-- 자바스크립트 -->
-/** Main Move Gallery */
+/* 메인 Move Gallery START
+================================= */
 
 
 function smartskinMoveGallery(obj,opt){
@@ -115,14 +118,14 @@ function smartskinMoveGallery(obj,opt){
 		
 		if(direction=="right"){
 			_this.currentLeft-=_this.width;
-			jQuery(_ul).animate({
+			$(_ul).animate({
 				"margin-left":_this.currentLeft+"px"
 			},{duration:500 ,complete:function(){
-				var li=jQuery(_ul).find("li:first-child");
-				jQuery(_ul).find("li:first-child").remove();
-				jQuery(_ul).find("li:last-child").after(li);
+				var li=$(_ul).find("li:first-child");
+				$(_ul).find("li:first-child").remove();
+				$(_ul).find("li:last-child").after(li);
 				_this.currentLeft+=_this.width;
-				jQuery(_ul).css("margin-left",_this.currentLeft+"px");
+				$(_ul).css("margin-left",_this.currentLeft+"px");
 				
 				if(_this.autoRolling)
 					_this.autoMove();
@@ -130,14 +133,14 @@ function smartskinMoveGallery(obj,opt){
 			}});
 		}else if(direction=="left"){
 			_this.currentLeft+=_this.width;
-			jQuery(_ul).animate({
+			$(_ul).animate({
 				"margin-left":_this.currentLeft+"px"
 			},{duration:500 ,complete:function(){
-				var li=jQuery(_ul).find("li:last-child");
-				jQuery(_ul).find("li:last-child").remove();
-				jQuery(_ul).find("li:first-child").before(li);
+				var li=$(_ul).find("li:last-child");
+				$(_ul).find("li:last-child").remove();
+				$(_ul).find("li:first-child").before(li);
 				_this.currentLeft-=_this.width;
-				jQuery(_ul).css("margin-left",_this.currentLeft+"px");
+				$(_ul).css("margin-left",_this.currentLeft+"px");
 				
 				if(_this.autoRolling)
 					_this.autoMove();
@@ -188,14 +191,14 @@ function smartskinMoveGallery(obj,opt){
 				return "";
 		}
 		
-		jQuery(this.rightBtn).bind("click",function(){
+		$(this.rightBtn).bind("click",function(){
 			clearTimeout(_this.timer);
 			_this.autoRolling=false;
 			_this.move("right");
 			autoMoveStart();
 		});
 		
-		jQuery(this.leftBtn).bind("click",function(){
+		$(this.leftBtn).bind("click",function(){
 			clearTimeout(_this.timer);
 			_this.autoRolling=false;
 			_this.move("left");
@@ -215,7 +218,7 @@ function smartskinMoveGallery(obj,opt){
 	return new gallery(obj,opt);
 }
 
-jQuery.fn.smartskinMoveGallery = function (opt) {
+$.fn.smartskinMoveGallery = function (opt) {
 	new smartskinMoveGallery(this,opt);
 }
 
@@ -229,8 +232,17 @@ $(document).ready(function(){
 		$("#mainmove_bestGallery .gallery").css("height",move_height);
 		$("#mainmove_bestGallery .gallery ul").css("margin-left",-move_width);
 		
+		/** 메이크샵 **/
 		$("#mainmove_bestGallery").smartskinMoveGallery({
+			width:move_width
+		});
+		
+		/** cafe24 **/
+		new smartskinMoveGallery($("#mainmove_bestGallery"),{
 			width:move_width
 		});
 	}
 });
+
+/* 메인 Move Gallery END
+================================= */
