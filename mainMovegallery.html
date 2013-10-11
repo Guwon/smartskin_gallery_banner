@@ -1,0 +1,236 @@
+<div id="mainmove_bestGallery">
+	<div class="gallery">
+		<ul>
+			<li onclick="location.href='/m/product.html?branduid=2129&xcode=004&mcode=004&scode='">
+				<img src="http://www.kanchogirl.com/design/kanchogirl/rolling/rolling13.jpg">
+			</li>
+			<li onclick="location.href='/m/product.html?branduid=704564&xcode=004&mcode=004&scode='">
+				<img src="http://www.kanchogirl.com/design/kanchogirl/rolling/rolling12.jpg">
+			</li>
+			<li onclick="location.href='/m/product.html?branduid=704358&search=%25C7%25C1%25B8%25AE%25B9%25CC%25BE%25F6&sort=&xcode=042&mcode=000&scode='">
+			<img src="http://www.kanchogirl.com/design/kanchogirl/rolling/rolling1.jpg"></li>
+			<li onclick="location.href='/m/product.html?branduid=2749&xcode=004&mcode=004&scode='">
+				<img src="http://www.kanchogirl.com/design/kanchogirl/rolling/rolling2.jpg">
+			</li>
+			<li onclick="location.href='/m/product.html?branduid=704634&xcode=009&mcode=004&scode='">
+				<img src="http://www.kanchogirl.com/design/kanchogirl/rolling/rolling15.jpg">
+			</li>
+		</ul>
+	</div>
+    <div class="gallery_btn">
+        <span><i class="icon-angle-left"></i></span>
+        <span><i class="icon-angle-right"></i></span>
+    </div>
+</div>
+
+<!-- 스타일 시트 -->
+
+/*메인 move gallery START
+==================================================*/
+#mainmove_bestGallery {
+position:relative;
+}
+#mainmove_bestGallery .gallery{
+overflow:hidden;
+}
+
+#mainmove_bestGallery .gallery ul{
+width:170%;
+display:block;
+}
+
+#mainmove_bestGallery .gallery li{
+display:inline-block;
+width:19%;
+}
+
+#mainmove_bestGallery .gallery img{
+width:100%;
+}
+
+
+#mainmove_bestGallery .gallery_btn span:first-child{
+position:absolute;
+top:50%;
+margin-top:-20px;
+left:5px;
+}
+
+#mainmove_bestGallery .gallery_btn span:last-child{
+position:absolute;
+top:50%;
+margin-top:-20px;
+right:5px;
+}
+
+#mainmove_bestGallery .gallery_btn span{
+font-size:30px;
+background:rgba(255,255,255,0.5);
+padding:5px;
+border-radius:3px;
+box-shadow:0px 0px 4px rgba(0,0,0,0.2);
+}
+
+/*메인 move gallery END
+==================================================*/
+
+
+<!-- 자바스크립트 -->
+/** Main Move Gallery */
+
+
+function smartskinMoveGallery(obj,opt){
+	//console.log(obj);
+	var gallery=function (obj,opt){
+		this.parent=obj;
+		this.el=obj.find('ul');
+		this.rightBtn=obj.find(".gallery_btn span:last-child");
+		this.leftBtn=obj.find(".gallery_btn span:first-child");
+		this.width=opt['width'];
+		this.currentLeft=-this.width;
+		this.autoRolling=true;
+		this.timer='';
+		this.bind();
+		this.autoMove();
+	}
+	
+	function getCursorPosition(touch){
+		var obj= touch.originalEvent.touches ? {x: touch.originalEvent.touches[0].clientX, y: touch.originalEvent.touches[0].clientY}
+		:{x: touch.clientX, y: touch.clientY};
+		return obj;
+	}
+		
+	gallery.prototype.autoMove=function(){
+		var _this=this;
+		clearTimeout(this.timer);
+
+		this.timer=setTimeout(function(){
+			_this.move("right");
+		},3000);
+	}
+		
+	gallery.prototype.move=function(direction){
+		var _this=this;
+		var _ul=this.el;
+		
+		if(direction=="right"){
+			_this.currentLeft-=_this.width;
+			jQuery(_ul).animate({
+				"margin-left":_this.currentLeft+"px"
+			},{duration:500 ,complete:function(){
+				var li=jQuery(_ul).find("li:first-child");
+				jQuery(_ul).find("li:first-child").remove();
+				jQuery(_ul).find("li:last-child").after(li);
+				_this.currentLeft+=_this.width;
+				jQuery(_ul).css("margin-left",_this.currentLeft+"px");
+				
+				if(_this.autoRolling)
+					_this.autoMove();
+
+			}});
+		}else if(direction=="left"){
+			_this.currentLeft+=_this.width;
+			jQuery(_ul).animate({
+				"margin-left":_this.currentLeft+"px"
+			},{duration:500 ,complete:function(){
+				var li=jQuery(_ul).find("li:last-child");
+				jQuery(_ul).find("li:last-child").remove();
+				jQuery(_ul).find("li:first-child").before(li);
+				_this.currentLeft-=_this.width;
+				jQuery(_ul).css("margin-left",_this.currentLeft+"px");
+				
+				if(_this.autoRolling)
+					_this.autoMove();
+					
+			}});
+		}
+	}
+	
+	gallery.prototype.bind=function(){
+		var _this=this;
+		
+		_this.el.bind("touchstart", dragStart);
+		
+		function dragStart(e){
+			clearTimeout(_this.timer);
+			_this.autoRolling=false;
+			
+			var startXY=getCursorPosition(e);
+
+			var startX=startXY.x;
+			var startY=startXY.y
+			_this.el.bind('touchmove', function(event) {
+				if(event.originalEvent){
+					var XY=getCursorPosition(event);
+					var direction=getDirection(startX,startY,XY);						
+					if(direction){
+						_this.el.unbind('touchmove');
+						_this.move(direction);	
+					}
+					autoMoveStart();
+				}else{
+					autoMoveStart();
+				}
+			});
+				
+			_this.el.bind('touchend', function(event) {	
+				_this.el.unbind('touchmove');	
+				autoMoveStart();
+			});
+		}
+		
+		function getDirection(sX,sY,XY){
+			if(sX-XY.x >= 3)
+				return "right";
+			else if(sX-XY.x <= -3)
+				return "left";
+			else
+				return "";
+		}
+		
+		jQuery(this.rightBtn).bind("click",function(){
+			clearTimeout(_this.timer);
+			_this.autoRolling=false;
+			_this.move("right");
+			autoMoveStart();
+		});
+		
+		jQuery(this.leftBtn).bind("click",function(){
+			clearTimeout(_this.timer);
+			_this.autoRolling=false;
+			_this.move("left");
+			autoMoveStart();
+		});
+		
+		function autoMoveStart(){
+			_this.autoRolling=true;
+			clearTimeout(_this.timer);
+			console.log("rolling start ");
+			_this.timer=setTimeout(function(){
+				_this.autoMove();
+			},3000);
+		}
+	}
+	
+	return new gallery(obj,opt);
+}
+
+jQuery.fn.smartskinMoveGallery = function (opt) {
+	new smartskinMoveGallery(this,opt);
+}
+
+$(document).ready(function(){
+	/* main move gallery */
+	if($("#mainmove_bestGallery").length){
+		var moveEl=$("#mainmove_bestGallery .gallery li").eq(0).find("img");
+		var move_height=moveEl.height();
+		var move_width=moveEl.width();
+
+		$("#mainmove_bestGallery .gallery").css("height",move_height);
+		$("#mainmove_bestGallery .gallery ul").css("margin-left",-move_width);
+		
+		$("#mainmove_bestGallery").smartskinMoveGallery({
+			width:move_width
+		});
+	}
+});
