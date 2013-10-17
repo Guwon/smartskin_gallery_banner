@@ -96,6 +96,7 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 			this.width=opt['width'];
 			this.currentLeft=-this.width;
 			this.autoRolling=true;
+			this.touched=false;
 			this.timer='';
 			this.bind();
 			this.autoMove();
@@ -110,10 +111,13 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 		gallery.prototype.autoMove=function(){
 			var _this=this;
 			clearTimeout(this.timer);
-
-			this.timer=setTimeout(function(){
-				_this.move("right");
-			},3000);
+			if(!_this.touched){
+				this.timer=setTimeout(function(){
+					if(!_this.touched)
+						_this.move("right");
+					
+				},3000);
+			}
 		}
 			
 		gallery.prototype.move=function(direction){
@@ -131,7 +135,7 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 					_this.currentLeft+=_this.width;
 					$(_ul).css("margin-left",_this.currentLeft+"px");
 					
-					if(_this.autoRolling)
+					if(!_this.touched)
 						_this.autoMove();
 
 				}});
@@ -146,7 +150,7 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 					_this.currentLeft-=_this.width;
 					$(_ul).css("margin-left",_this.currentLeft+"px");
 					
-					if(_this.autoRolling)
+					if(!_this.touched)
 						_this.autoMove();
 						
 				}});
@@ -160,7 +164,7 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 			
 			function dragStart(e){
 				clearTimeout(_this.timer);
-				_this.autoRolling=false;
+				_this.touched=true;
 				
 				var startXY=getCursorPosition(e);
 
@@ -174,15 +178,14 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 							_this.el.unbind('touchmove');
 							_this.move(direction);	
 						}
-						autoMoveStart();
 					}else{
-						autoMoveStart();
+						_this.touched=false;
 					}
 				});
 					
 				_this.el.bind('touchend', function(event) {	
 					_this.el.unbind('touchmove');	
-					autoMoveStart();
+					_this.touched=false;
 				});
 			}
 			
@@ -197,25 +200,23 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 			
 			$(this.rightBtn).bind("click",function(){
 				clearTimeout(_this.timer);
-				_this.autoRolling=false;
+				_this.touched=true;
 				_this.move("right");
 				autoMoveStart();
+				
 			});
 			
 			$(this.leftBtn).bind("click",function(){
 				clearTimeout(_this.timer);
-				_this.autoRolling=false;
+				_this.touched=true;
 				_this.move("left");
 				autoMoveStart();
+				
 			});
 			
 			function autoMoveStart(){
-				_this.autoRolling=true;
-				clearTimeout(_this.timer);
-				console.log("rolling start ");
-				_this.timer=setTimeout(function(){
-					_this.autoMove();
-				},3000);
+				_this.touched=false;
+				_this.autoMove();
 			}
 		}
 		
