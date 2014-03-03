@@ -24,6 +24,25 @@
   </div>
 </div>
 
+<script>
+<!-- 3D큐브 갤러리 이미지 변경 -->
+var smartSkincubeBannerImgList=new Array(
+"/SkinImg/m_main_img01.jpg",
+"/SkinImg/m_main_img02.jpg",
+"/SkinImg/m_main_img03.jpg",
+"/SkinImg/m_main_img04.jpg"
+);
+
+<!-- 3D큐브 갤러리 링크 변경 -->
+var smartSkincubeBannerImgList_Link=new Array(
+"/front/php/product.php?product_no=8153&main_cate_no=91&display_group=",
+"/front/php/product.php?product_no=8143&main_cate_no=91&display_group=",
+"//front/php/product.php?product_no=8111&main_cate_no=62&display_group=",
+"/front/php/product.php?product_no=7716&main_cate_no=92&display_group="
+);
+
+</script>
+
 <!-- css  -->
 
 /* Cube Banner START 
@@ -420,6 +439,7 @@ right:5px;
 				if(!cube.touched)
 					return;
 				
+				e.preventDefault();
 				clearInterval(cube.setinterval);
 				cube.setinterval=0;
 				var startXY=getCursorPosition(e);
