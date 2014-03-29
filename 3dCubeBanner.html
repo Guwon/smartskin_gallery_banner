@@ -42,8 +42,6 @@ var smartSkincubeBannerImgList=new Array(
 
 <!-- css  -->
 
-/* Cube Banner START 
-======================================================================*/
 
 /* Cube Banner START 
 ======================================================================*/
@@ -531,11 +529,9 @@ font-size:11px;
 		
 		if($("#smartSkin-cubeBanner-container").length){
 			var perspective=Modernizr.csstransforms3d;
-			//var perspective;
 			if(perspective){
 				var cubeBanner=new smartSkinCubeBannerSwipe("smartSkin-cubeBanner-container",{
 					imgList:smartSkincubeBannerImgList,
-					//imgListLink:smartSkincubeBannerImgList_Link,
 					auto:true
 				});
 			}else{
