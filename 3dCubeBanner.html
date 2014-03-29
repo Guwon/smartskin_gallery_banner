@@ -11,8 +11,11 @@
 		</div>
 	</div>
 	<div class="smartSkin-cubeBanner-btn">
-		<span><i class="icon-angle-left"></i></span>
-		<span><i class="icon-angle-right"></i></span>
+		<span class="prev"></span>
+		<span class="next"></span>
+	</div>
+	<div class="prd_total">
+	<span></span>
 	</div>
 </div>
 
@@ -27,23 +30,20 @@
 <script>
 <!-- 3D큐브 갤러리 이미지 변경 -->
 var smartSkincubeBannerImgList=new Array(
-"/SkinImg/m_main_img01.jpg",
-"/SkinImg/m_main_img02.jpg",
-"/SkinImg/m_main_img03.jpg",
-"/SkinImg/m_main_img04.jpg"
+{img:"/SkinImg/3d1.jpg",link:"#"},
+{img:"/SkinImg/3d2.jpg",link:"#"},
+{img:"/SkinImg/3d3.jpg",link:"#"},
+{img:"/SkinImg/3d4.jpg",link:"#"}
 );
 
-<!-- 3D큐브 갤러리 링크 변경 -->
-var smartSkincubeBannerImgList_Link=new Array(
-"/front/php/product.php?product_no=8153&main_cate_no=91&display_group=",
-"/front/php/product.php?product_no=8143&main_cate_no=91&display_group=",
-"//front/php/product.php?product_no=8111&main_cate_no=62&display_group=",
-"/front/php/product.php?product_no=7716&main_cate_no=92&display_group="
-);
+
 
 </script>
 
 <!-- css  -->
+
+/* Cube Banner START 
+======================================================================*/
 
 /* Cube Banner START 
 ======================================================================*/
@@ -58,7 +58,21 @@ padding:2px 5px 2px 5px;
 box-shadow: 0 2px 3px rgba(0,0,0,0.2);
 -moz-box-shadow: 0 2px 3px rgba(0,0,0,0.2);
 -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+padding: 10px 5px 12px 6px;
 }
+
+#smartSkin-cubeBanner-container .smartSkin-cubeBanner-btn  .prev:before{
+content: "\f104";
+font-family: FontAwesome;
+color:#888;
+}
+
+#smartSkin-cubeBanner-container .smartSkin-cubeBanner-btn  .next:before{
+content: "\f105";
+font-family: FontAwesome;
+color:#888;
+}
+
 
 #smartSkin-cubeBanner-container-gallery{
 display:none;
@@ -68,6 +82,7 @@ display:none;
 	width:100%;
 	text-align:center;
 	position: relative;
+	margin: 10px 0px 45px;
 }
 
 
@@ -168,7 +183,7 @@ display:none;
 .smartSkin-cubeBanner-btn span{
 position:absolute;
 top:50%;
-font-size:35px;
+font-size:30px;
 margin-top:-15px;
 
 }
@@ -180,6 +195,18 @@ left:5px;
 .smartSkin-cubeBanner-btn :last-child{
 right:5px;
 }
+
+#smartSkin-cubeBanner-container .prd_total{
+position:absolute;
+right:5px;
+bottom:10px;
+border-radius:2px;
+background: rgba(119, 119, 119, 0.5);
+padding: 3px;
+color: #fff;
+font-size:11px;
+}
+
 /* Cube Banner END
 ======================================================================*/
 <!-- 자바 스크립트 -->
@@ -190,15 +217,15 @@ right:5px;
 (function($){
 	var documentWidth=parseInt($(document).width());
 	var cubeBannerDevice=new Array(
-		{d:320,w:82,z:146},
-		{d:360,w:82,z:145},
-		{d:400,w:80.5,z:157},
-		{d:480,w:77,z:184},
-		{d:533,w:75,z:200},
-		{d:568,w:74,z:209},
-		{d:768,w:67.8,z:258},
-		{d:800,w:66.8,z:266},
-		{d:1024,w:61,z:312}
+	{d:320,w:82,z:146},
+	{d:360,w:82,z:145},
+	{d:400,w:80.5,z:157},
+	{d:480,w:77,z:184},
+	{d:533,w:75,z:200},
+	{d:568,w:74,z:209},
+	{d:768,w:67.8,z:258},
+	{d:800,w:66.8,z:266},
+	{d:1024,w:61,z:312}
 	);
 
 	var smartSkinCubeBannerSwipe=function(el,option)
@@ -212,7 +239,7 @@ right:5px;
 			
 			this.el=$("#"+el);
 			this.imgList=option.imgList;
-			this.imgListLink=option.imgListLink;
+			//this.imgListLink=option.imgListLink;
 			
 			if(!this.el.length || !this.imgList.length)
 				return;
@@ -226,8 +253,8 @@ right:5px;
 			this.deg=0;
 			this.setinterval;
 			
-			$("#"+el+" .smartSkin-cubeBanner-origin").html("<img src='"+this.imgList[0]+"'>");
-			var link=this.imgListLink[0];
+			$("#"+el+" .smartSkin-cubeBanner-origin").html("<img src='"+this.imgList[0]["img"]+"'>");
+			var link=this.imgList[0]["link"];
 			this.el_inner.bind("click",function(){
 				location.href=link;
 			}); 
@@ -266,26 +293,32 @@ right:5px;
 			return obj;
 		}
 		
+		
 		smartSkinCube.prototype.autoMove=function(){
 			var cube=this;
 			this.setinterval=setInterval(function(){
-				cube.touched=false;
-				cube.move("R");
+				if(cube.touched){
+					cube.touched=false;
+					cube.move("R");
+				}
 			},3000);
-		}
 
+		}
+		
+		
 		smartSkinCube.prototype.move=function(direction){
 			if(this.touched)
 				return;
-			console.log("move:",direction);
+			//console.log("move:",direction);
 			this.touched=false;
 			var cube=this;
-			console.log("last Index:",this.index);
+			//console.log("last Index:",this.index);
 			if(direction=="R"){
 				if(this.index==this.imgTotal)
 					this.index=1;
 				else
 					this.index++;
+				
 				this.deg-=90;
 					
 			}else if(direction=="L"){
@@ -293,10 +326,11 @@ right:5px;
 					this.index=this.imgTotal;
 				else
 					this.index--;
+				
 				this.deg+=90;
 			}
-
-			var link=this.imgListLink[this.index-1];
+			//console.log("deg:",this.deg);
+			var link=this.imgList[this.index-1]["link"];
 			this.el_inner.bind("click",function(){
 				location.href=link;
 				
@@ -307,7 +341,7 @@ right:5px;
 				cube.image(cube.index);
 				cube.touched=true;
 				setTimeout(function(){
-					console.log(cube.touched,cube.setinterval);
+					//console.log(cube.touched,cube.setinterval);
 					if(cube.touched && !cube.setinterval)
 						cube.autoMove();
 				},3000);
@@ -316,111 +350,101 @@ right:5px;
 		
 		smartSkinCube.prototype.image=function(index){
 			var total=this.imgTotal;
-			if(total==4){
-				if(!this.el_banner.html()){
-					if(this.imgList[0])
-						var html="<div><img src='"+this.imgList[0]+"'>&nbsp;</div>";	
-					if(this.imgList[1])
-						html+="<div><img src='"+this.imgList[1]+"'>&nbsp;</div>";
-					if(this.imgList[2])
-						html+="<div><img src='"+this.imgList[2]+"'>&nbsp;</div>";
-					if(this.imgList[3])
-						html+="<div><img src='"+this.imgList[3]+"'>&nbsp;</div>";
-					
-					this.el_banner.html(html);
-					this.el_banner.find("div").eq(0).css(transformProp, " translateZ("+this.cal_translateZ+"px)");
-					this.el_banner.find("div").eq(1).css(transformProp, "rotateY(90deg) translateZ("+this.cal_translateZ+"px)");
-					this.el_banner.find("div").eq(2).css(transformProp, "rotateY(180deg) translateZ("+this.cal_translateZ+"px)");
-					this.el_banner.find("div").eq(3).css(transformProp, "rotateY(-90deg) translateZ("+this.cal_translateZ+"px)");
-				}
-			}else{
-				var current_step=Math.abs((this.deg/90)%4);
-				if(current_step){
-					if(this.deg<0)
-						current_step=current_step+1;
-					else
-						current_step=5-current_step;
-				}else{
-					current_step++;
-				}
-				
-				this.index=index;
-				var fisrt=0;
-				var second=0;
-				var third=0;
-				var fourth=0;
-				var current=index-1;
-				
-				if(current_step==1){
-					fisrt=current;
-					second=Math.abs((current+1)%total);
-					third=Math.abs((current+2)%total);
-					if((current-1)<0)
-						fourth=total-1;
-					else
-						fourth=Math.abs((current-1)%total);
-					
-				}else if(current_step==2){
-					if((current-1)<0){
-						fisrt=total-1;
-					}else{
-						fisrt=Math.abs((current-1)%total);
-					}
-					second=current;
-					third=Math.abs((current+1)%total);
-					fourth=Math.abs((current+2)%total);
-				}else if(current_step==3){
-					if((current-2)<0)
-						fisrt=total-2;
-					else
-						fisrt=Math.abs((current-2)%total);
-						
-					if((current-1)<0)
-						second=total-1;
-					else
-						second=Math.abs((current-1)%total);
 
-					third=current;
-					fourth=Math.abs((current+1)%total);
-				}else if(current_step==4){
-					if(current==total-1)
-						fisrt=0;
-					else
-						fisrt=Math.abs((current+1)%total);
-						
-					if((current-2)<0)
-						second=total-2;
-					else
-						second=Math.abs((current-2)%total);
-						
-					if((current-1)<0)
-						third=total-1;
-					else
-						third=Math.abs((current-1)%total);
-					
-					fourth=current;
-				}
+			var current_step=Math.abs((this.deg/90)%4);
 				
-				//if(current_step==1){
-				if(this.imgList[fisrt])
-					var html="<div><img src='"+this.imgList[fisrt]+"'>&nbsp;</div>";
-				if(this.imgList[second])
-					html+="<div><img src='"+this.imgList[second]+"'>&nbsp;</div>";
-				if(this.imgList[third])
-					html+="<div><img src='"+this.imgList[third]+"'>&nbsp;</div>";
-				if(this.imgList[fourth])
-					html+="<div><img src='"+this.imgList[fourth]+"'>&nbsp;</div>";
-				
-				this.el_banner.html(html);
-				this.el_banner.find("div").eq(0).css(transformProp, " translateZ("+this.cal_translateZ+"px)");
-				this.el_banner.find("div").eq(1).css(transformProp, "rotateY(90deg) translateZ("+this.cal_translateZ+"px)");
-				this.el_banner.find("div").eq(2).css(transformProp, "rotateY(180deg) translateZ("+this.cal_translateZ+"px)");
-				this.el_banner.find("div").eq(3).css(transformProp, "rotateY(-90deg) translateZ("+this.cal_translateZ+"px)");
-				//}
+			if(current_step){
+				if(this.deg<0)
+					current_step=current_step+1;
+				else
+					current_step=5-current_step;
+			}else{
+				current_step++;
 			}
+				
+			this.index=index;
+			var fisrt=0;
+			var second=0;
+			var third=0;
+			var fourth=0;
+			var current=index-1;
+				
+			if(current_step==1){
+				fisrt=current;
+				second=Math.abs((current+1)%total);
+				third=Math.abs((current+2)%total);
+				if((current-1)<0)
+					fourth=total-1;
+				else
+					fourth=Math.abs((current-1)%total);
+					
+			}else if(current_step==2){
+				if((current-1)<0){
+					fisrt=total-1;
+				}else{
+					fisrt=Math.abs((current-1)%total);
+				}
+				second=current;
+				third=Math.abs((current+1)%total);
+				fourth=Math.abs((current+2)%total);
+			}else if(current_step==3){
+				if((current-2)<0)
+					fisrt=total-2;
+				else
+					fisrt=Math.abs((current-2)%total);
+						
+				if((current-1)<0)
+					second=total-1;
+				else
+					second=Math.abs((current-1)%total);
+
+				third=current;
+				fourth=Math.abs((current+1)%total);
+			}else if(current_step==4){
+				if(current==total-1)
+					fisrt=0;
+				else
+					fisrt=Math.abs((current+1)%total);
+					
+				if((current-2)<0)
+					second=total-2;
+				else
+					second=Math.abs((current-2)%total);
+						
+				if((current-1)<0)
+					third=total-1;
+				else
+					third=Math.abs((current-1)%total);
+					
+				fourth=current;
+			}
+				
+			//console.log(fisrt,second,third,fourth);
+
+			//if(current_step==1){
+			if(this.imgList[fisrt]["img"])
+				var html="<div><img src='"+this.imgList[fisrt]["img"]+"'>&nbsp;</div>";
+			if(this.imgList[second]["img"])
+				html+="<div><img src='"+this.imgList[second]["img"]+"'>&nbsp;</div>";
+			if(this.imgList[third]["img"])
+				html+="<div><img src='"+this.imgList[third]["img"]+"'>&nbsp;</div>";
+			if(this.imgList[fourth]["img"]) 
+				html+="<div><img src='"+this.imgList[fourth]["img"]+"'>&nbsp;</div>";
+				
+			var pasing=(current+1)+" / "+total;
+			this.el.find(".prd_total span").html(pasing);
+			//console.log(current,second);
+			this.el_banner.html(html);
+			this.el_banner.find("div").eq(0).css(transformProp, " translateZ("+this.cal_translateZ+"px)");
+			this.el_banner.find("div").eq(1).css(transformProp, "rotateY(90deg) translateZ("+this.cal_translateZ+"px)");
+			this.el_banner.find("div").eq(2).css(transformProp, "rotateY(180deg) translateZ("+this.cal_translateZ+"px)");
+			this.el_banner.find("div").eq(3).css(transformProp, "rotateY(-90deg) translateZ("+this.cal_translateZ+"px)");
+			//}
 			
 		}
+		
 
+		
 		smartSkinCube.prototype.bind = function() {
 			var el=this.el;
 			var el_banner=this.el_banner;
@@ -438,8 +462,9 @@ right:5px;
 			function dragStart(e){
 				if(!cube.touched)
 					return;
-				
+					
 				e.preventDefault();
+				
 				clearInterval(cube.setinterval);
 				cube.setinterval=0;
 				var startXY=getCursorPosition(e);
@@ -452,7 +477,7 @@ right:5px;
 				el_inner.bind('mousemove touchmove', function(event) {
 					if(event.originalEvent) {
 						var XY=getCursorPosition(event);
-						console.log(startX,XY);
+						//console.log(startX,XY);
 						cube_direction=direction(startX,startY,XY);
 						if(cube_direction){
 							el_inner.unbind('mousemove touchmove');
@@ -467,7 +492,7 @@ right:5px;
 				
 				el.bind('mousedown touchend', function(event) {	
 					el_inner.unbind('mousemove touchmove');	
-					cube.touched=true;
+					//cube.touched=true;
 				});
 			}
 			
@@ -494,24 +519,33 @@ right:5px;
 				cube.setinterval=0;
 				cube.move("R");
 			});
+			
 		}
+		
 		new smartSkinCube(el,option);
 	}
 
 
 	$(document).ready(function(){
+		
+		
 		if($("#smartSkin-cubeBanner-container").length){
 			var perspective=Modernizr.csstransforms3d;
+			//var perspective;
 			if(perspective){
 				var cubeBanner=new smartSkinCubeBannerSwipe("smartSkin-cubeBanner-container",{
 					imgList:smartSkincubeBannerImgList,
-					imgListLink:smartSkincubeBannerImgList_Link,
+					//imgListLink:smartSkincubeBannerImgList_Link,
 					auto:true
 				});
 			}else{
 				cubeBanner_Gallery();
 			}
+			
 		}
+		
+		
+		
 	});
 })(jQuery);
 
