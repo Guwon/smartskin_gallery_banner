@@ -1,0 +1,285 @@
+/*===============================================================================
+- TimeSale Type2
+=================================================================================*/
+
+
+		
+<div id="SMS_Topmodule_timesale">
+	<div id="SMS_Topmodule_timesale_container">
+	</div>
+</div>
+
+<!-- 스타일 시트 -->
+
+/*TimeSale Type1 CSS START
+==================================================*/
+
+#SMS_Topmodule_timesale{
+position:relative;
+display:none;
+}
+
+#SMS_Topmodule_timesale_container{
+width:100%;
+padding:0px;
+margin:0px;
+}
+
+#SMS_Topmodule_timesale_container img{
+width:100%;
+}
+
+#SMS_Topmodule_timesale_container .open{
+position:absolute;
+display:inline-block;
+right: 15px;
+bottom: 15px;
+font-family: 'Signika Negative', sans-serif;
+font-size:12px;
+}
+
+
+
+#SMS_Topmodule_timesale_container .open b {
+display:ininle-block;
+margin:0px 1px;
+border-radius:2px;
+vertical-align:top;
+}
+
+#today_timeSale .timesale_con li .close b {
+display:inline-block;
+color:red;
+font-size:12px;
+font-weight:bold;
+padding:0 0 0 5px;
+}
+
+
+#SMS_Topmodule_timesale_container .open .timeText {
+padding:3px;
+background:#000;
+color:#fff;
+}
+
+#SMS_Topmodule_timesale_container .close{
+position:absolute;
+display:inline-block;
+background:rgba(0,0,0,0.5);
+top:0px;
+left:0px;
+width:100%;
+height:100%;
+}
+
+#SMS_Topmodule_timesale_container .close b{
+width: 100%;
+margin-top: 30%;
+display: inline-block;
+text-align: center;
+color:#fff;
+font-weight:bold;
+font-size:11px;
+line-height: 13px;
+}
+
+/*TimeSale Type1 CSS END
+==================================================*/
+
+
+<!-- 자바스크립트 -->
+/* TimeSale Type1 START
+================================= */
+
+
+
+(function($) {
+	function mainTodayTimesale(obj,opt){
+		var gallery=function (obj,opt){
+			this.parent=obj;
+			this.timesale_con=obj;
+			this.todaySetInterval=0;
+			this.todaySaleMove();
+		}
+		
+		
+		gallery.prototype.todaySaleMove=function(){
+		
+			var _this=this;
+			var time=$(_this.timesale_con).find("span").attr("time");
+			clearInterval(_this.todaySetInterval);
+			if(time){
+				_this.todaySaleTimer();
+			}
+		}
+		
+		gallery.prototype.todaySaleTimer=function(){
+			var _this=this;
+
+			_this.todaySetInterval=setInterval(function(){
+
+				var currentDate = new Date();
+				currentDate=currentDate.getTime();
+
+				var time=$(_this.timesale_con).find("span").attr("time");
+				var start=$(_this.timesale_con).find("span").attr("start");
+				var endImg=$(_this.timesale_con).find("span").attr("endImg");
+				var endLink=$(_this.timesale_con).find("span").attr("endLink");
+				var span=$(_this.timesale_con).find("span");
+				
+				if(time){
+					var start_year=start.substr(0,4);
+					var start_month=start.substr(5,2)-1;
+					var start_day=start.substr(8,2);
+					var start_hours=start.substr(11,2);
+					var start_minutes=start.substr(14,2);
+					var start_seconds=start.substr(17,2);
+					
+					
+					var year=time.substr(0,4);
+					var month=time.substr(5,2)-1;
+					var day=time.substr(8,2);
+					var hours=time.substr(11,2);
+					var minutes=time.substr(14,2);
+					var seconds=time.substr(17,2);
+					var saleDate=new Date(year,month,day,hours,minutes,seconds);
+					saleDate=saleDate.getTime();
+					
+					var startDate=new Date(start_year,start_month,start_day,start_hours,start_minutes,start_seconds);
+					startDate=startDate.getTime();
+					
+				
+					$(span).removeClass();
+					if(currentDate >=startDate &&  currentDate<=saleDate){
+						$(_this.parent).show();
+						if($("#SMS_Topmodule_topbanner").length){
+							$("#SMS_Topmodule_topbanner").hide();
+						} 
+						var timer_dis=saleDate-currentDate;
+						var dday_hours=Math.floor(timer_dis/(1000*60*60));
+						var dday_minutes=Math.floor(timer_dis/(1000*60));
+						var dday_minutes_text=dday_minutes-dday_hours*60;
+						var dday_seconds=Math.floor(timer_dis/1000)-dday_minutes*60;
+
+						if(String(dday_hours).length==1)
+							dday_hours="0"+dday_hours;
+						if(String(dday_minutes_text).length==1)
+							dday_minutes_text="0"+dday_minutes_text;
+						if(String(dday_seconds).length==1)
+							dday_seconds="0"+dday_seconds;
+							
+						var ddayHtml='<b class="timeText">'+String(dday_hours).substr(0,1)+'</b><b class="timeText">'+String(dday_hours).substr(1,2)+'</b><b>:</b>';
+						ddayHtml+='<b class="timeText">'+String(dday_minutes_text).substr(0,1)+'</b><b class="timeText">'+String(dday_minutes_text).substr(1,2)+'</b><b>:</b>';
+						ddayHtml+='<b class="timeText">'+String(dday_seconds).substr(0,1)+'</b><b class="timeText">'+String(dday_seconds).substr(1,2)+'</b>';
+						$(span).html(ddayHtml);
+						$(span).addClass("open");
+
+						$(span).show();
+						var link=$(_this.timesale_con).find('img').attr("link");
+
+						$(_this.timesale_con).find('img').attr("onclick",link);
+					}else{
+						clearInterval(_this.todaySetInterval);
+						if(endImg){
+							$(_this.timesale_con).find("img").attr("src",endImg);
+							if(endLink){
+								$(_this.timesale_con).find("img").attr("onclick","location.href='"+endLink+"'");
+							}else{
+								$(_this.timesale_con).find("img").attr("onclick","alert('종료되었습니다!')");
+							}
+							$(span).hide();
+						}else{
+							$(span).css({
+								"display":"inline-block",
+								"width":"100%",
+								"height":"100%",
+								"position":"absolute",
+								"left":"0px",
+								"top":"0px",
+								"background":"rgba(1,1,1,0.5)"
+							});
+							$(span).show();
+							$(span).attr("onclick","alert('종료되었습니다!')");
+						}
+						$(_this.parent).show();
+						$(_this.timesale_con).find("img").attr("link","");
+						
+						
+					}
+				}else{
+					clearInterval(_this.todaySetInterval);
+					$(span).hide();
+				}
+			},1000);
+		}
+		
+		
+		return new gallery(obj,opt);
+	}
+
+	$.fn.mainTodayTimesale = function (opt) {
+		new mainTodayTimesale(this,opt);
+	}
+
+})(Smartskin.$);
+
+$(document).ready(function(){
+	/*  time sale */
+	if($("#SMS_Topmodule_timesale").length){ 
+		jQuery.ajax({
+			type:"GET",
+			url:"/SkinImg/timesale.xml",
+			dataType:"xml", 
+			success : function(xml) {
+				var html="";
+				var tab_html="";
+				var btn_html="";
+				var total=$(xml).find("main").find("img").length;
+				
+				$(xml).find("main").find("img").each(function(key){
+					var src=$(this).find("url").text();
+					var link=$(this).find("link").text();
+					var time=$(this).find("end").text();
+					var start=$(this).find("start").text();
+					var endImg=$(this).find("endImg").text();
+					var endLink=$(this).find("endLink").text();
+					endImg=endImg.replace(/^\s*/,'');
+					endImg=endImg.replace(/\s*$/,'');
+					endLink=endLink.replace(/^\s*/,'');
+					endLink=endLink.replace(/\s*$/,'');
+					var num=key+1;
+					
+					var timeHtml;
+					if(time){
+						timeHtml='<span class="timer" time="'+time+'" start="'+start+'" endImg="'+endImg+'"  endLink="'+endLink+'"></span>';
+						html+='<img src="'+src+'" link="location.href=\''+link+'\'">'+timeHtml;
+					}
+				});
+				
+				if(html){				
+					$('#SMS_Topmodule_timesale_container').html(html);
+					Smartskin.$("#SMS_Topmodule_timesale").mainTodayTimesale();
+				}
+							
+			},     
+			error : function(xhr, status, error) {
+
+			}
+		});
+	}
+});
+
+/* 메인 Move Gallery END
+================================= */
+<?xml version="1.0" encoding="UTF-8" ?>
+<main>
+	<img>
+		<url><![CDATA[ http://file.bagazimuri.cafe24.com/Design/skin_5/wepix_design/wepix_img/main_testimg_rudao.jpg ]]></url>
+		<link><![CDATA[ /m/page.html?id=10 ]]></link>
+		<start>2014-03-29 15:00:00</start>
+		<end>2014-03-31 11:00:00</end>
+		<endImg><![CDATA[ ]]></endImg>
+		<endLink><![CDATA[  ]]></endLink>
+	</img>
+
+</main>
