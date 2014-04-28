@@ -1,0 +1,36 @@
+<div id="top_gallery" class="top_gallery">
+				<ul>
+					<li>
+						<img  data-src="http://smartskin.co.kr/data/makeshop/standard/custom/thecocoshop/top_banner.JPG" onclick="location.href=''">
+					</li>
+				</ul>
+			</div>
+			
+			<div id="top_link_img" style="display:none">
+					<ul>
+						<li><img data-src="http://smartskin.co.kr/data/makeshop/standard/custom/thecocoshop/top01.jpg"  ></li>
+						<li><img data-src="http://smartskin.co.kr/data/makeshop/standard/custom/thecocoshop/top02.jpg"  ></li>
+						<li><img data-src="http://smartskin.co.kr/data/makeshop/standard/custom/thecocoshop/top03.jpg"  ></li>
+					</ul>
+			</div>
+<script>
+// 상단
+	var currentURL=document.location.href;
+	currentURL=currentURL.split("?");
+	currentURL=currentURL[0].split("/m/");
+	
+		
+	if(currentURL[1] =="" || !currentURL[1] || currentURL[1]=="index.html" || currentURL[1]=="main.html"){
+		var random_total=$("#top_link_img li").length;
+		var random_img=Math.random()*random_total;
+		random_img=Math.floor(random_img);
+		
+		var img=$("#top_link_img li").eq(random_img).html();
+		img=img.replace("data-src","src");
+		$("#top_gallery li").html(img);
+		$("#top_gallery").show();
+	}else{
+		$("#top_gallery").hide();
+		$(".logo_all_menu").css({height:"65px"});
+	}
+</script>
