@@ -1,0 +1,77 @@
+<div id="prdviewContainer">
+		<ul>
+			<li onclick="smartsinPrdview(1)"></li>
+			<li onclick="smartsinPrdview(2)" class="over2"></li>
+			<li onclick="smartsinPrdview(3)" ></li>
+			<li onclick="smartsinPrdview(4)"></li>
+		</ul>
+	</div>
+	
+	
+	
+	
+<script>
+
+function smartsinPrdview(id){
+	var url=document.location.href;
+	var urlArr=url.split("&smartskin=");
+	var sort_chk1=urlArr[0].split("#");
+	var sort_cont="";
+	if(sort_chk1[1])
+		sort_cont="#"+sort_chk1[1];
+					
+	if(!sort_cont && urlArr[1]){
+		var sort_chk2=urlArr[1].split("#");
+		if(sort_chk2[1])
+			sort_cont="#"+sort_chk2[1];
+	}
+				
+	var setURL=url.split("#");
+	setURL=setURL[0].split("&smartskin=");
+	setURL=setURL[0];
+					
+	url=setURL+"&smartskin="+id+sort_cont;
+	document.location.href=url;
+}
+			
+</script>
+
+
+/* 자바스크립트 */
+//카테고리 리스트 보기방식 변경
+	var currentURL=location.href;
+	
+	if(currentURL.search("smartskin")!=-1){
+		var currentURLArr=currentURL.split("smartskin=");
+		var id=0;
+		
+		if(currentURL.search("smartskin=1")!=-1)
+			id=1;
+		else if(currentURL.search("smartskin=2")!=-1)
+			id=2;
+		else if(currentURL.search("smartskin=3")!=-1)
+			id=3;
+		else if(currentURL.search("smartskin=4")!=-1)
+			id=4;
+			
+		
+		if(id){
+			var setWidth="";
+			if(id==1)
+				setWidth="100%";
+			else if(id==2)
+				setWidth="50%";
+			else if(id==3)
+				setWidth="33.33%";
+			else if(id==4)
+				setWidth="25%";
+				
+			$(".smartskinPrdlist .grid3 li").each(function(){
+				$(this).css({width:setWidth});
+			});
+			var index=id-1;
+			
+			$("#prdviewContainer li").removeClass();			
+			$("#prdviewContainer li").eq(index).addClass("over"+id);
+		}
+	}
