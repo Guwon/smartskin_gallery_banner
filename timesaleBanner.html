@@ -156,10 +156,17 @@ line-height: 13px;
 							$("#SMS_Topmodule_topbanner").hide();
 						} 
 						var timer_dis=saleDate-currentDate;
+						var dday_days=Math.floor(timer_dis/(1000*60*60*24));
 						var dday_hours=Math.floor(timer_dis/(1000*60*60));
 						var dday_minutes=Math.floor(timer_dis/(1000*60));
 						var dday_minutes_text=dday_minutes-dday_hours*60;
 						var dday_seconds=Math.floor(timer_dis/1000)-dday_minutes*60;
+						
+						var ddayHtml="";
+						if(dday_days){
+							dday_hours=dday_hours%dday_days;
+							ddayHtml='<b class="timeText">'+dday_days+'</b><b class="timeText">일</b><b>:</b>';
+						}
 
 						if(String(dday_hours).length==1)
 							dday_hours="0"+dday_hours;
@@ -168,7 +175,7 @@ line-height: 13px;
 						if(String(dday_seconds).length==1)
 							dday_seconds="0"+dday_seconds;
 							
-						var ddayHtml='<b class="timeText">'+String(dday_hours).substr(0,1)+'</b><b class="timeText">'+String(dday_hours).substr(1,2)+'</b><b>:</b>';
+						ddayHtml+='<b class="timeText">'+String(dday_hours).substr(0,1)+'</b><b class="timeText">'+String(dday_hours).substr(1,2)+'</b><b>:</b>';
 						ddayHtml+='<b class="timeText">'+String(dday_minutes_text).substr(0,1)+'</b><b class="timeText">'+String(dday_minutes_text).substr(1,2)+'</b><b>:</b>';
 						ddayHtml+='<b class="timeText">'+String(dday_seconds).substr(0,1)+'</b><b class="timeText">'+String(dday_seconds).substr(1,2)+'</b>';
 						$(span).html(ddayHtml);
