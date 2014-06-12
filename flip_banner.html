@@ -1,0 +1,164 @@
+<div id="SMS_flipBannerContainer">
+	<div class="origin"><img src="/design/eastpjh/smartskin/4444.jpg"></div>
+	<div id="SMS_flipBanner">
+		<div class="SMSFlipper">
+			<div class="front animationFrontBanner"><img src="/design/eastpjh/smartskin/9999.jpg" onclick="location.href='/m/product_list.html?xcode=005&amp;type=X&amp;mcode=001'"></div>
+			<div class="back animationBackBanner"><img src="/design/eastpjh/smartskin/4444.jpg" onclick="smartappInstall();"></div>
+		</div>
+	</div>
+</div>
+
+
+/*==============================
+TOP FLIP BANNER CSS START
+==============================*/
+
+#SMS_flipBannerContainer{
+width: 100%;
+position: relative;
+line-height:0px;
+background:#333;
+}
+
+#SMS_flipBannerContainer img{
+width:100%;
+}
+
+#SMS_flipBannerContainer .origin{
+opacity:0;
+}
+
+#SMS_flipBanner{
+
+}
+
+
+#SMS_flipBanner .SMSFlipper .front,#SMS_flipBanner .SMSFlipper .back{
+width: 100%;
+height: 100%;
+-o-transition: all .5s;
+-ms-transition: all .5s;
+-moz-transition: all .5s;
+-webkit-transition: all .5s;
+transition: all .5s;
+-webkit-backface-visibility: hidden;
+-ms-backface-visibility: hidden;
+-moz-backface-visibility: hidden;
+backface-visibility: hidden;
+position: absolute;
+top: 0px;
+left: 0px;
+}
+
+#SMS_flipBanner .SMSFlipper .front{
+ z-index: 2;
+}
+
+#SMS_flipBanner .SMSFlipper .back{
+z-index: 1;
+-webkit-transform: rotateX(-180deg);
+-ms-transform: rotateX(-180deg);
+-moz-transform: rotateX(-180deg);  
+transform: rotateX(-180deg);  
+}
+
+
+@-webkit-keyframes animationFrontBanner{
+  0% {
+    z-index: 2;
+    -webkit-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+  }
+  40% {
+    z-index: 2;
+    -webkit-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+  }
+
+  50%{
+    z-index: 1;
+    -webkit-transform: rotateX(-180deg);
+    -ms-transform: rotateX(-180deg);
+    -moz-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+  }
+
+  90%{
+   z-index: 2;
+    -webkit-transform: rotateX(-180deg);
+    -ms-transform: rotateX(-180deg);
+    -moz-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+  }
+  100%{
+     z-index: 2;
+    -webkit-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+  }
+}
+
+.animationFrontBanner {
+display:inline-block;
+-webkit-animation:animationFrontBanner 7s;
+-webkit-animation-iteration-count: infinite;
+-webkit-animation-timing-function: ease-in-out;
+}
+
+
+
+@-webkit-keyframes animationBackBanner{
+  0% {
+    z-index: 2;
+    -webkit-transform: rotateX(-180deg);
+    -ms-transform: rotateX(-180deg);
+    -moz-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+  }
+  40% {
+    z-index: 2;
+    -webkit-transform: rotateX(-180deg);
+    -ms-transform: rotateX(-180deg);
+    -moz-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+  }
+
+  50%{
+    z-index: 1;
+    -webkit-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+  }
+
+  90%{
+   z-index: 2;
+    -webkit-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+  }
+  100%{
+     z-index: 2;
+    -webkit-transform: rotateX(-180deg);
+    -ms-transform: rotateX(-180deg);
+    -moz-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+  }
+}
+
+.animationBackBanner {
+display:inline-block;
+-webkit-animation:animationBackBanner 7s;
+-webkit-animation-iteration-count: infinite;
+-webkit-animation-timing-function: ease-in-out;
+}
+
+/*==============================
+TOP FLIP BANNER CSS END
+==============================*/
