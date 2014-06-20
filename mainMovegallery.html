@@ -100,7 +100,12 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 			this.touched=false;
 			this.timer='';
 			this.bind();
+			
+			/*이미지 하나씩 이동 */
 			this.autoMove();
+			
+			/*smooth 이동*/
+			//this.smoothMove();
 		}
 		
 		function getCursorPosition(touch){
@@ -156,6 +161,35 @@ Smartskin.$ = Smartskin.$ || window.Zepto || window.jQuery;
 						
 				}});
 			}
+		}
+		
+		gallery.prototype.smoothMove=function(direction){
+			var _this=this;
+			var _ul=this.el;
+			
+			_this.currentLeft-=_this.width;
+			var margin_left="";
+			var move_left="";
+			
+			
+			setInterval(function(){
+				margin_left=$(_ul).css("margin-left");
+				margin_left=margin_left.replace("px","");
+				move_left=margin_left;
+				
+				if(margin_left>_this.currentLeft){
+					move_left--;
+					$(_ul).css({"margin-left":move_left+"px"});
+				}else{						
+					var li=$(_ul).find("li:first-child");
+					$(_ul).find("li:first-child").remove();
+					$(_ul).find("li:last-child").after(li);
+					_this.currentLeft+=_this.width;
+					$(_ul).css("margin-left",_this.currentLeft+"px");
+					_this.currentLeft-=_this.width;
+					move_left=_this.currentLeft;
+				}
+			},20);
 		}
 		
 		gallery.prototype.bind=function(){
