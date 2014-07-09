@@ -1,0 +1,203 @@
+<div id="smartskinMain_popup" class="main_popup_box">
+   <div class="main_popup_DisplayContainer">
+		<div class="main_popup_container">
+			<div class="main_popup_body"><img src="" onclick="location.href=''"></div>
+			<div class="main_popup_btn">
+				<span class="btn_todayClose"><input type="checkbox" id="smartskinTodayClose" name="smartskinTodayClose" > 오늘하루 열지않기</span>
+				<span id="smartskinMain_popup_Btnclose" class="btn_close">닫기</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="smartskinMain_popup_floating">
+	<div id="pop_close"><b></b></div>
+	<div id="smartskinMain_popup_floating_Event" class="event">메인팝업 이벤트</div>
+</div>
+
+
+/* 메인 팝업  */
+
+.main_popup_box {
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+padding:10px;
+background:rgba(0,0,0,0.7);
+z-index:999;
+}
+
+.main_popup_box .main_popup_DisplayContainer{
+display: box;
+box-pack: center;
+box-align: center;
+display: -webkit-box;
+-webkit-box-pack: center;
+-webkit-box-align: center;
+height: 100%;
+}
+
+.main_popup_box .main_popup_container {
+width:100%;
+max-width:400px;
+margin:0 auto;
+border:1px solid #000;
+background:#fff;
+}
+
+.main_popup_box .main_popup_container .main_popup_btn {
+text-align: center;
+}
+
+.main_popup_box .main_popup_container .main_popup_btn .btn_todayClose{
+display: inline-block;
+padding: 0 10px 10px;
+}
+
+.main_popup_box .main_popup_container .main_popup_btn .btn_close{
+display: inline-block;
+padding: 0 10px 10px;
+}
+
+.main_popup_box .main_popup_body {
+text-align:center;
+color:#444;
+padding:30px 0 10px;
+}
+
+.main_popup_box .main_popup_body img{
+width:100%;
+}
+
+#smartskinMain_popup_floating{
+display:none;
+position:fixed;
+left:0;
+bottom:0;
+width:100%; 
+height:40px;
+line-height:40px;
+background:#222;
+border:1px solid #333;
+z-index:13;
+color:#fff;
+font-size:12px;
+text-align: center;
+font-weight:bold;
+
+box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.22);
+}
+
+#smartskinMain_popup_floating #pop_close{
+display: inline-block;
+width: 20px;
+height: 20px;
+background: #fff;
+position: absolute;
+right: 0;
+z-index: 10;
+}
+
+#smartskinMain_popup_floating #pop_close b {
+display: -webkit-box;
+-webkit-box-pack: center;
+-webkit-box-align: center;
+height: 20px;
+line-height: 20px;
+}
+
+#smartskinMain_popup_floating #pop_close b:before{
+position: relative;
+content: "\f00d ";
+font-family: FontAwesome;
+font-weight: normal;
+color: #222;
+font-size:15px;
+}
+
+/* 메인 팝업 끝 */
+
+
+
+/** 메인 전체 팝업 **/
+
+	if($("smartskinMain_popup")){
+	    var smsUrl=document.location.href;
+		smsUrl=smsUrl.split("?");
+		smsUrl=smsUrl[0].split("/m/");
+		
+		
+		if(!smsUrl[1] || smsUrl[1]=="main.html" || smsUrl[1] =="index.html"){
+			var smsPopupData=sessionStorage.getItem("smsPopupData");
+			
+			if(smsPopupData!="open" || !smsPopupData){
+				//오늘 하루 열지 않기
+				var smsDatedata = localStorage.getItem("smsPopupStorage"); 
+
+				if(smsDatedata){
+					var smsDate=new Date();
+					var nowTime=smsDate.getTime();
+					var smsDay=nowTime-smsDatedata;
+					smsDay=Math.floor(smsDay/(1000*60*60*24));
+					if(smsDay>=1){
+						$("smartskinMain_popup").setStyle({"display":"block"});
+						sessionStorage.setItem("smsPopupData", "open");
+					}
+				}else{
+					
+					$("smartskinMain_popup").setStyle({"display":"block"});		
+					sessionStorage.setItem("smsPopupData", "open");
+				}
+				
+				if($("smartskinMain_popup").getStyle("display")!="none"){
+					setTimeout(function(){
+						$("smartskinMain_popup").setStyle({"display":"none"});
+						$("smartskinMain_popup_floating").setStyle({"display":"block"});		
+					},5000);
+				}
+			}else{
+				if($("smartskinMain_popup_floating")){
+					var Event=sessionStorage.getItem("smsPopupCloseData");
+					 if(Event!="open"){
+						$("smartskinMain_popup_floating").setStyle({"display":"block"});	
+					 }
+					
+				}
+			}
+		}else{
+			if($("smartskinMain_popup_floating")){
+				var Event=sessionStorage.getItem("smsPopupCloseData");
+					 if(Event!="open"){
+						$("smartskinMain_popup_floating").setStyle({"display":"block"});	
+					 }
+				}
+		}
+		
+
+		$("smartskinMain_popup_Btnclose").onclick=function(){
+			var checkBox=document.getElementById("smartskinTodayClose").checked;
+			if(checkBox){
+				var smsDate=new Date();
+				var nowTime=smsDate.getTime();
+				localStorage.setItem("smsPopupStorage", nowTime);
+			}
+			$("smartskinMain_popup").setStyle({"display":"none"});	
+		}
+		
+	}
+	
+	$("smartskinMain_popup_floating_Event").onclick=function(){
+		if($("smartskinMain_popup").getStyle("display")!="none"){
+			$("smartskinMain_popup").setStyle({"display":"none"});	
+		}else{
+			$("smartskinMain_popup").setStyle({"display":"block"});	
+		}				
+	}
+	
+	$("pop_close").onclick=function(){
+		sessionStorage.setItem("smsPopupCloseData", "open");
+		$("smartskinMain_popup_floating").setStyle({"display":"none"});	
+	}
