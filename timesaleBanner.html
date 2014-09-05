@@ -164,7 +164,7 @@ line-height: 13px;
 						
 						var ddayHtml="";
 						if(dday_days){
-							dday_hours=dday_hours%dday_days;
+							dday_hours=dday_hours-(dday_days*24);
 							ddayHtml='<b class="timeText">'+dday_days+'</b><b class="timeText">일</b><b>:</b>';
 						}
 
